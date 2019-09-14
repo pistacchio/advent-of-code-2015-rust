@@ -1,0 +1,125 @@
+use regex::Regex;
+use std::fs::read_to_string;
+use std::iter;
+use std::cmp::max;
+
+const INPUT_FILE: &str = "data/day_6.txt";
+const GRID_SIZE: (usize, usize) = (1_000, 1_000);
+
+lazy_static! {
+    static ref INSTRUCTION_REGEX: Regex = Regex::new(r"^(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)$").unwrap();
+}
+
+enum Switch {
+    On,
+    Off,
+    Toggle,
+}
+
+struct Instrunction {
+    operation: Switch,
+    from: (usize, usize),
+    to: (usize, usize),
+}
+
+impl Instrunction {
+    fn from_str(s: &str) -> Self {
+        let caps: Vec<_> = INSTRUCTION_REGEX.captures(s)
+            .expect("Cannot parse one of the instructions")
+            .iter()
+            .map(|c| c.expect("Cannot parse one of the instructions").as_str())
+            .skip(1)
+            .collect();
+
+        let operation = match caps[0] {
+            "turn on" => Switch::On,
+            "turn off" => Switch::Off,
+            _ => Switch::Toggle
+        };
+        let from = (caps[1].parse::<usize>().unwrap(), caps[2].parse::<usize>().unwrap());
+        let to = (caps[3].parse::<usize>().unwrap(), caps[4].parse::<usize>().unwrap());
+
+        Self {
+            operation,
+            from,
+            to,
+        }
+    }
+}
+
+fn switch_lights(grid: &mut Vec<bool>, instructions: &[Instrunction]) {
+    for instruction in instructions {
+        for x in instruction.from.0..=instruction.to.0 {
+            for y in instruction.from.1..=instruction.to.1 {
+                match instruction.operation {
+                    Switch::On => grid[x + y * GRID_SIZE.0] = true,
+                    Switch::Off => grid[x + y * GRID_SIZE.0] = false,
+                    Switch::Toggle => grid[x + y * GRID_SIZE.0] = !grid[x + y * GRID_SIZE.0]
+                }
+            }
+        }
+    }
+}
+
+fn switch_lights_advanced(grid: &mut Vec<i32>, instructions: &[Instrunction]) {
+    for instruction in instructions {
+        for x in instruction.from.0..=instruction.to.0 {
+            for y in instruction.from.1..=instruction.to.1 {
+                match instruction.operation {
+                    Switch::On => grid[x + y * GRID_SIZE.0] += 1,
+                    Switch::Off => grid[x + y * GRID_SIZE.0] = max(0, grid[x + y * GRID_SIZE.0] -1),
+                    Switch::Toggle => grid[x + y * GRID_SIZE.0] += 2
+                }
+            }
+        }
+    }
+}
+
+fn make_grid() -> Vec<bool> {
+    iter::repeat(false).take(GRID_SIZE.0 * GRID_SIZE.1).collect::<Vec<_>>()
+}
+
+pub fn run() -> String {
+    let input = read_to_string(INPUT_FILE).unwrap();
+    let input = input.trim();
+
+    let mut grid = make_grid();
+
+    let instructions: Vec<Instrunction> = input.lines()
+        .map(|l| Instrunction::from_str(l))
+        .collect();
+
+    switch_lights(&mut grid, &instructions);
+
+    grid.iter().filter(|c| **c).count().to_string()
+}
+
+pub fn run_pt2() -> String {
+ let input = read_to_string(INPUT_FILE).unwrap();
+    let input = input.trim();
+
+    let mut grid = make_grid().iter().map(|_| 0).collect::<Vec<i32>>();
+
+    let instructions: Vec<Instrunction> = input.lines()
+        .map(|l| Instrunction::from_str(l))
+        .collect();
+
+    switch_lights_advanced(&mut grid, &instructions);
+
+    grid.iter().sum::<i32>().to_string()
+}
+
+#[test]
+fn test_run() {
+    let mut grid = make_grid();
+    switch_lights(&mut grid, &[Instrunction::from_str("turn on 0,0 through 999,999")]);
+    assert_eq!(grid.iter().filter(|c| **c).count(), 1_000_000);
+
+    let mut grid = make_grid();
+    switch_lights(&mut grid, &[Instrunction::from_str("toggle 0,0 through 999,0")]);
+    assert_eq!(grid.iter().filter(|c| **c).count(), 1_000);
+
+    let mut grid = make_grid();
+    switch_lights(&mut grid, &[Instrunction::from_str("turn off 499,499 through 500,500")]);
+    assert_eq!(grid.iter().filter(|c| **c).count(), 0);
+}
