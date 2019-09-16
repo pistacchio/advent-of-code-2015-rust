@@ -15,6 +15,7 @@ mod day_9;
 mod day_10;
 mod day_11;
 mod day_12;
+mod day_13;
 
 fn main() {
 //    println!("Day 1: {}", day_1::run());
@@ -41,6 +42,8 @@ fn main() {
 //    println!("Day 10, pt2: {}", day_10::run_pt2());
 //    println!("Day 11: {}", day_11::run());
 //    println!("Day 11, pt2: {}", day_11::run_pt2());
-    println!("Day 12: {}", day_12::run());
-    println!("Day 12, pt2: {}", day_12::run_pt2());
+//    println!("Day 12: {}", day_12::run());
+//    println!("Day 12, pt2: {}", day_12::run_pt2());
+//    println!("Day 13: {}", day_13::run());
+    println!("Day 13, pt2: {}", day_13::run_pt2());
 }
