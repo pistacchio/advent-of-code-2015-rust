@@ -66,5 +66,5 @@ fn main() {
 //    println!("Day 19: {}", day_19::run());
 //    println!("Day 19, pt2: {}", day_19::run_pt2());
 //    println!("Day 20: {}", day_20::run());
-    println!("Day 20, pt2: {}", day_20::run_pt2());
+//    println!("Day 20, pt2: {}", day_20::run_pt2());
 }

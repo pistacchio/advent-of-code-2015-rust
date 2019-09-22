@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use divisors::get_divisors;
 use itertools::Itertools;
 use rayon::prelude::*;
 
