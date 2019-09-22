@@ -1,3 +1,6 @@
+use crypto::md5::Md5;
+use crypto::digest::Digest;
+
 const OK_SIGNAL: &str = "00000";
 const OK_SIGNAL_PT2: &str = "000000";
 
@@ -19,15 +22,18 @@ impl Iterator for Miner {
 }
 
 fn mine_adventcoins(key: &str, signal: &str) -> usize {
-    let miner = Miner::new(key);
+    let mut miner = Miner::new(key);
+    let mut md5 = Md5::new();
 
-    miner.enumerate()
-        .find(|(_, m)| {
-            let hash = format!("{:x}", md5::compute(m));
+    loop {
+        let m = miner.next().unwrap();
 
-            hash.starts_with(signal)
-        })
-        .unwrap().0 + 1
+        md5.reset();
+        md5.input_str(&m);
+        if md5.result_str().starts_with(signal) {
+            return miner.0;
+        }
+    }
 }
 
 pub fn run() -> String {

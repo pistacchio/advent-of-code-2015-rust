@@ -2,6 +2,8 @@ use std::sync::atomic::{AtomicUsize, Ordering, AtomicBool};
 use std::thread::spawn;
 use std::sync::mpsc::{Sender, Receiver};
 use std::sync::{mpsc, Arc};
+use crypto::md5::Md5;
+use crypto::digest::Digest;
 
 const OK_SIGNAL: &str = "00000";
 const OK_SIGNAL_PT2: &str = "000000";
@@ -18,6 +20,7 @@ fn mine_adventcoins(key: &str, signal: &str) -> usize {
         let thread_tx = tx.clone();
         let thread_key = key.to_string().clone();
         let thread_signal = signal.to_string().clone();
+        let mut thread_md5 = Md5::new();
 
         spawn(move || {
             loop {
@@ -27,9 +30,10 @@ fn mine_adventcoins(key: &str, signal: &str) -> usize {
 
                 let n = thread_counter.fetch_add(1, Ordering::SeqCst);
 
-                let hash = format!("{:x}", md5::compute(format!("{}{}", thread_key, n)));
+                thread_md5.reset();
+                thread_md5.input_str(&format!("{}{}", thread_key, n));
 
-                if hash.starts_with(&thread_signal) {
+                if thread_md5.result_str().starts_with(&thread_signal) {
                     thread_tx.send(n).unwrap();
                     thread_found.store(true, Ordering::Relaxed);
                     break;

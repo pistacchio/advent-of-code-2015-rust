@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 use permutohedron::LexicalPermutation;
-use std::fs::read_to_string;
-use itertools::Itertools;
 use std::iter::{FromIterator, repeat};
-use std::borrow::Borrow;
+use std::fs::read_to_string;
 
 const INPUT_FILE: &str = "data/day_13.txt";
 
@@ -43,7 +41,6 @@ fn arrange_table(hosts: HashMap<String, HashMap<String, i32>>) -> i32 {
         p.to_owned()
     }).collect();
 
-    let num_hosts = hosts.keys().count();
     let happiness: Vec<i32> = permutations.iter().map(|table| -> i32 {
         table.iter().enumerate().map(|(idx, host)| {
             let mut host_happiness = 0;
@@ -100,6 +97,3 @@ David would gain 41 happiness units by sitting next to Carol."#;
 
     assert_eq!(arrange_table(parse_hosts(input)), 330);
 }
-
-#[test]
-fn test_run_pt2() {}

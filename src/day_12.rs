@@ -1,5 +1,4 @@
 use serde_json::value::Value;
-use std::borrow::Borrow;
 use std::fs::read_to_string;
 
 const INPUT_FILE: &str = "data/day_12.txt";
