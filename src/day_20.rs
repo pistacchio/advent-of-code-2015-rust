@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use itertools::Itertools;
-use rayon::prelude::*;
 
 fn find_house(n: u64) -> u64 {
     let mut houses: HashMap<u64, u64> = HashMap::new();
@@ -45,8 +44,7 @@ pub fn run_pt2() -> String {
 
 #[test]
 fn test_get_house_presents() {
-//    assert_eq!(find_house(1), 10);
-//    assert_eq!(find_house(2), 30);
-//    assert_eq!(get_house_presents(3), 40);
+    assert_eq!(find_house(1), 10);
+    assert_eq!(find_house(2), 30);
     assert_eq!(find_house(9), 130);
 }
