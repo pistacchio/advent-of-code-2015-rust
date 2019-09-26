@@ -24,8 +24,7 @@ pub fn run() -> String {
 pub fn run_pt2() -> String {
     let mut res = "3113322113".to_string();
 
-    for n in 0..50 {
-        println!("{}", n);
+    for _ in 0..50 {
         res = look_and_say(&res);
     }
 
