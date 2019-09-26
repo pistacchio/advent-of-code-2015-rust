@@ -55,7 +55,7 @@ fn fight(player_hp: i32, player_mana: i32, boss_hp: i32, boss_dmg: i32, hard_mod
     let mut recharge_active = false;
     let mut recharge_count = 0;
 
-    let mut player_armor = 0;
+    let mut player_armor;
 
     loop {
         if shield_active {
@@ -146,7 +146,6 @@ fn fight(player_hp: i32, player_mana: i32, boss_hp: i32, boss_dmg: i32, hard_mod
                         player_hp += 2
                     }
                     Spell::Shield => {
-                        player_armor = 7;
                         shield_active = true;
                         shield_count = 0;
                     }

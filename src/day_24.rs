@@ -1,5 +1,4 @@
 use std::fs::read_to_string;
-use permutator::copy::Combination;
 use itertools::{Itertools, min};
 
 const INPUT_FILE: &str = "data/day_24.txt";

@@ -9,7 +9,7 @@ fn code_at(row: i128, col: i128) -> i128 {
         while c <= diagonal {
             last = (last * 252_533) % 33_554_393;
 
-            if r == 2981 && c == 3075 {
+            if r == row && c == col {
                 return last;
             }
 
